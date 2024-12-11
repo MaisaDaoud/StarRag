@@ -1,0 +1,7 @@
+openai
+python-dotenv
+pydantic
+numpy
+sentence-transformers
+langchain-core
+langchain-huggingface
