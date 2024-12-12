@@ -20,7 +20,7 @@ base_url = os.environ['OPENAI_BASE_URL']
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
 PROMPT_TEMPLATE = """ <s>[INST] <<SYS>>
-Your are a content generator who has got the following  context:  {context}. adopts Yoda’s speaking style"
+Your are a content generator who has got the following  context:  {context}. Adopt Yoda’s speaking style"
 <</SYS>>
 ---
 

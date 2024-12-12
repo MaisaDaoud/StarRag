@@ -4,4 +4,4 @@ pydantic
 numpy
 sentence-transformers
 langchain-core
-langchain-huggingface
+#llama_index
