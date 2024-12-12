@@ -2,10 +2,15 @@
 
 # How to Run
 Create a file call it ```.env``` and add the following variables to it
-```OPENAI_BASE_URL=https://url
-OPENAI_API_KEY=sk-key```
+
+```
+OPENAI_BASE_URL=https://url
+OPENAI_API_KEY=sk-key
+
+```
 
 Create conda environment
+
 ```
 conda create --name rag python=3.10 
 ```
