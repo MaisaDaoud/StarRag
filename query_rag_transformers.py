@@ -70,7 +70,7 @@ def rag(user_prompt:str, txt_file:str,openai_model:str="Gpt4o",api:bool=False):
     
     text_model = SentenceTransformer('sentence-transformers/clip-ViT-B-32-multilingual-v1')
 
-    # Now we encode our text:
+    # encode our text:
     texts = []
     try:
         with open(txt_file, 'r') as file:
@@ -80,12 +80,12 @@ def rag(user_prompt:str, txt_file:str,openai_model:str="Gpt4o",api:bool=False):
     except:
         raise Exception(f"File not found!") from None
     
-    #generate text and query embeddings
+    # generate text and query embeddings
     text_embeddings = generate_embeddings(text_model,texts)
 
     query_embed = generate_embeddings(text_model,user_prompt)
 
-    # Compute cosine similarities:
+    # compute cosine similarities:
     cos_sim = util.cos_sim(text_embeddings, query_embed)
     max_sim_idx = torch.argmax(cos_sim)
     context_text = texts[max_sim_idx]
@@ -111,7 +111,7 @@ def rag(user_prompt:str, txt_file:str,openai_model:str="Gpt4o",api:bool=False):
             }
         ],
         model=openai_model,
-        temperature=0.0 #strictly return from context
+        temperature=0.0 # to strictly return from context
     )   
         
         response = chat_completion.choices[0].message.content

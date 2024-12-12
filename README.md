@@ -24,7 +24,7 @@ Or simply run the api on your localhost with
 ```
 python app.py
 ```
-Note: ```query_rag_transformers.py``` has a method called ```evaluate_response``` that tests the degree of relivance between the response and the documents. It needs a recent API key to run.
+Note: ```query_rag_transformers.py``` has a method called ```evaluate_response``` that tests the degree of relevance between the response and the documents using llama_index. the call has been commented as it needs a recent API key to run.
 
 ### Langchain and InMemoryVectorStore
-This repo provides sample code on  text generation using langchain and vectorstore. Please see/run ```query_rag.py``` for reference 
+This repo provides equivelent code but using langchain, semantic search and vectorstore. Please see/run ```query_rag.py``` for reference 

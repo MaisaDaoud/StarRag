@@ -6,12 +6,14 @@ import openai
 
 from dataclasses import dataclass
 from typing import List
-from langchain_openai import OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from sentence_transformers import SentenceTransformer
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.documents import Document
+
+import json
 
 _ = load_dotenv(find_dotenv()) 
 api_key  = os.environ['OPENAI_API_KEY'] 
@@ -19,13 +21,16 @@ base_url = os.environ['OPENAI_BASE_URL']
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-PROMPT_TEMPLATE = """ <s>[INST] <<SYS>>
-Your are a content generator who has got the following  context:  {context}. Adopt Yoda’s speaking style"
-<</SYS>>
----
 
-Answer the question based on the above context: {question}  [/INST]
-"""
+
+MESSAGE = [
+        (
+            "system",
+            "You are a helpful assistant that answers question about Star Wars movie based of the following context \
+                    {context_text}. Only give answer from them context. Adopt  Yoda’s speaking style",
+        ),
+        ("human", "{user_prompt}"),
+    ]
 
 class VectorStore:
     def __init__(self, txt_file:str='star_wars_corpus.txt'):
@@ -67,7 +72,7 @@ def rag(user_prompt:str, vector_store):
     #     base_url=base_url,
     # )
     # define open client
-    llm = OpenAI(
+    llm = ChatOpenAI(
     model= "Gpt4o", # "gpt-3.5-turbo-instruct",
     temperature=0,
     max_retries=2,
@@ -77,21 +82,27 @@ def rag(user_prompt:str, vector_store):
 
     # Searching for similar texts
     results = vector_store.similarity_search(query=user_prompt, k=1)
-    # for doc in results:
-    #     print(f"* {doc.page_content} [{doc.metadata}]")
+    for doc in results:
+        print(f"* {doc.page_content} [{doc.metadata}]")
 
     context_text = results[0].page_content
 
     # define template
-    prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-    prompt = prompt_template.format(context=context_text, question=user_prompt)
+    prompt_template = ChatPromptTemplate.from_messages(MESSAGE)
+    prompt = prompt_template.format(context_text=context_text, user_prompt=user_prompt)
 
     response = llm.invoke(prompt)
-    response_text = response
+    response_text = response.content
 
-    return QueryResponse(
-        user_prompt=user_prompt, retrieved_context=context_text, system_response=response_text
-    )
+    # return QueryResponse(
+    #     user_prompt=user_prompt, retrieved_context=context_text, system_response=response_text
+    # )
+    return_val = {
+        'user_prompt':user_prompt, 
+        'retrieved_context':context_text, 
+        'system_response':response_text
+    }
+    return json.dumps(return_val)
 
 if __name__== "__main__":
 
@@ -100,7 +111,7 @@ if __name__== "__main__":
     parser.add_argument('--user_prompt', dest='user_prompt',
                         default= 'Who is Luke Skywalker’s father?', type=str, required=True, help='enter user prompt')  
     parser.add_argument('--txt_file', dest='txt_file',
-                        default= 'star_wars_corpus.txt', type=str,  help='corpus')                      
+                        default= 'data/star_wars_corpus.txt', type=str,  help='corpus')                      
 
     args = parser.parse_args()
     vector_store_obj = VectorStore(args.txt_file)
