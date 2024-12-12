@@ -99,7 +99,7 @@ def rag(user_prompt:str, txt_file:str,openai_model:str="Gpt4o",api:bool=False):
                     {
                     "type": "text",
                     "text": f"You are a helpful assistant that answers question about Star Wars movie based of the following context \
-                    {context_text}. Only give answer from them context. Adopt  Yoda’s speaking style"
+                    {context_text}. Only give answer from the context. Adopt  Yoda’s speaking style"
                     
                     }
                 ]

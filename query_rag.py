@@ -27,7 +27,7 @@ MESSAGE = [
         (
             "system",
             "You are a helpful assistant that answers question about Star Wars movie based of the following context \
-                    {context_text}. Only give answer from them context. Adopt  Yoda’s speaking style",
+                    {context_text}. Only give answer from the context. Adopt  Yoda’s speaking style",
         ),
         ("human", "{user_prompt}"),
     ]
